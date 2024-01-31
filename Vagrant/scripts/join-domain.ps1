@@ -4,6 +4,7 @@
 $hostsFile = "c:\Windows\System32\drivers\etc\hosts"
 
 Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Joining the domain..."
+[System.Net.HttpWebRequest]::DefaultWebProxy = New-Object System.Net.WebProxy($null)
 
 Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) First, set DNS to DC to join the domain..."
 $newDNSServers = "192.168.56.102"
@@ -11,6 +12,9 @@ $adapters = Get-WmiObject Win32_NetworkAdapterConfiguration | Where-Object {$_.I
 # Don't do this in Azure. If the network adatper description contains "Hyper-V", this won't apply changes.
 # Specify the DC as a WINS server to help with connectivity as well
 $adapters | ForEach-Object {if (!($_.Description).Contains("Hyper-V")) {$_.SetDNSServerSearchOrder($newDNSServers); $_.SetWINSServer($newDNSServers, "")}}
+
+# Ensure dns preference on domain interface through higher interface metrics # fix #801
+Get-NetIPAddress | Where-Object { $_.IPAddress -match "192.168.56." } | Set-NetIPInterface -ifIndex { $_.InterfaceIndex } -InterfaceMetric 10
 
 Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Now join the domain..."
 $hostname = $(hostname)

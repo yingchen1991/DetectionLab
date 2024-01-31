@@ -6,6 +6,11 @@ Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Installing WEF Subscriptions..."
 Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Copying Custom Event Channels DLL..."
 if (-not (Test-Path "$env:windir\system32\CustomEventChannels.dll"))
 {
+    # Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Disable the Windows Event Collctor Service..."
+    # net stop wecsvc
+    # netsh winhttp reset proxy
+    [System.Net.HttpWebRequest]::DefaultWebProxy = New-Object System.Net.WebProxy($null)
+
     Copy-Item c:\Users\vagrant\AppData\Local\Temp\windows-event-forwarding-master\windows-event-channels\CustomEventChannels.dll "$env:windir\system32"
     Copy-Item c:\Users\vagrant\AppData\Local\Temp\windows-event-forwarding-master\windows-event-channels\CustomEventChannels.man "$env:windir\system32"
 

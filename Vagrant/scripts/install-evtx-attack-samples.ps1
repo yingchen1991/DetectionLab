@@ -6,6 +6,7 @@ Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Indexing EVTX Attack Samples into Spl
 $ProgressPreference = 'SilentlyContinue'
 # GitHub requires TLS 1.2 as of 2/27
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+[System.Net.WebRequest]::DefaultWebProxy = New-Object System.Net.WebProxy("http://10.0.2.2:10809")
 
 $inputsConf = "C:\Program Files\SplunkUniversalForwarder\etc\apps\Splunk_TA_windows\local\inputs.conf"
 

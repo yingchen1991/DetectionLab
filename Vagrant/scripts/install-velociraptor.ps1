@@ -17,6 +17,7 @@ Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Determining latest release of Velocir
 # GitHub requires TLS 1.2 as of 2/27
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 # Disabling the progress bar speeds up IWR https://github.com/PowerShell/PowerShell/issues/2138
+[System.Net.WebRequest]::DefaultWebProxy = New-Object System.Net.WebProxy("http://10.0.2.2:10809")
 $ProgressPreference = 'SilentlyContinue'
 # Fix issue #869: Problem is that link to windows msi is hidden behind toogle item and not accesible, therefore get link for linux and replace with windows link
 $velociraptorDownloadUrlLinux = "https://github.com" + ((Invoke-WebRequest "https://github.com/Velocidex/velociraptor/releases" -UseBasicParsing).links | Select-Object -ExpandProperty href | Select-String "linux-amd64$" | Select-Object -First 1)

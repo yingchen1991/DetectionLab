@@ -36,6 +36,10 @@ If ($hostname -ne "win10" -And (Get-Service -Name WinDefend -ErrorAction Silentl
   Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Windows Defender has already been disabled or uninstalled."
 }
 
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Internet Explorer\Main" -Name "DisableFirstRunCustomize" -Value 2
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
+[System.Net.WebRequest]::DefaultWebProxy = New-Object System.Net.WebProxy("http://10.0.2.2:10809")
+
 # Purpose: Downloads and unzips a copy of the latest Mimikatz trunk
 Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Determining latest release of Mimikatz..."
 $tag = (Invoke-WebRequest "https://api.github.com/repos/gentilkiwi/mimikatz/releases" -UseBasicParsing | ConvertFrom-Json)[0].tag_name

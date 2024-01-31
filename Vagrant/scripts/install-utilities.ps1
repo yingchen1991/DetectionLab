@@ -3,7 +3,9 @@
 If (-not (Test-Path "C:\ProgramData\chocolatey")) {
   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
   Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Installing Chocolatey"
-  Invoke-Expression ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
+  # Invoke-Expression ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
+  #Set-ExecutionPolicy Bypass -Scope Process -Force; 
+  Invoke-WebRequest -Uri 'https://chocolatey.org/install.ps1' -OutFile 'install.ps1'; .\install.ps1 -ChocolateyDownloadUrl "https://community.chocolatey.org/api/v2/package/chocolatey/1.4.0"
 } else {
   Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Chocolatey is already installed."
 }

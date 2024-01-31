@@ -32,6 +32,7 @@ $WScriptShell = New-Object -ComObject WScript.Shell
 
 # Microsoft likes TLSv1.2 as well
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+[System.Net.WebRequest]::DefaultWebProxy = New-Object System.Net.WebProxy("http://10.0.2.2:10809")
 Write-Host "$('[{0:HH:mm}]' -f (Get-Date)) Downloading Autoruns64.exe..."
 Try { 
   (New-Object System.Net.WebClient).DownloadFile('https://live.sysinternals.com/Autoruns64.exe', $autorunsPath) 
